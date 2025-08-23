@@ -1,10 +1,27 @@
-﻿namespace Server
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+
+namespace Server
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static async void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            using var host = Host.CreateDefaultBuilder()
+                .ConfigureLogging(logging =>
+                {
+                   
+                })
+                .ConfigureAppConfiguration(config =>
+                {
+                    config.AddJsonFile("appsettings.json");
+                })
+                .ConfigureServices(services =>
+                {
+
+                })
+                .Build();
+            await host.StartAsync();
         }
     }
 }

@@ -1,0 +1,32 @@
+version: '3.8'
+name: 'teamproj'
+services:
+  rabbitmq:
+    image: rabbitmq:4-management 
+    hostname: tprabbitmq
+    ports:
+      - "5672:5672" 
+      - "15672:15672" 
+    environment:
+      - RABBITMQ_DEFAULT_USER=rmuser
+      - RABBITMQ_DEFAULT_PASS=rmpassword
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/mnesia
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"] 
+      interval: 5s
+      timeout: 20s
+      retries: 5
+  postgres:
+    image: postgres:alpine
+    container_name: tppostgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: top
+      POSTGRES_DB: top
+      POSTGRES_PASSWORD: top
+      POSTGRES_HOST_AUTH_METHOD: trust
+    restart: unless-stopped
+volumes:
+  rabbitmq_data: 
