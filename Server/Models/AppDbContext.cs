@@ -11,6 +11,8 @@ namespace Server.Models
         public DbSet<Grade> Grades => Set<Grade>();
         public DbSet<Student> Students => Set<Student>();
         public DbSet<Teacher> Teachers => Set<Teacher>();
+        public DbSet<Schedule> Schedules => Set<Schedule>();
+        public DbSet<Lesson> Lessons => Set<Lesson>();
 
         public AppDbContext(IConfiguration configuration)
         {
