@@ -3,7 +3,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Server.Models;
 using System.Text;
+using System.Text.Json;
 
 namespace Server.Services
 {
@@ -35,14 +37,15 @@ namespace Server.Services
                 var body = Encoding.UTF8.GetString(args.Body.ToArray());
                 try
                 {
+                    var message = JsonSerializer.Deserialize<Message>(body);
 
                 } catch (Exception e)
                 {
-
+                    _logger.LogWarning($"Сообщение не получилось десериализовать: {e}");
                 }
             } catch (Exception e)
             {
-
+                _logger.LogError($"Ошибка при получении сообщение: {e}");
             }
         }
 
