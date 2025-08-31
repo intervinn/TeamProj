@@ -3,7 +3,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Server.Handlers;
 using Server.Models;
+using Shared.Models;
 using System.Text;
 using System.Text.Json;
 
@@ -11,23 +13,54 @@ namespace Server.Services
 {
     class MessageConsumeService : IHostedService, IDisposable
     {
-        private IConfiguration _configuration;
-        private ILogger<MessageConsumeService> _logger;
-        private StorageService _storage;
+        private readonly IConfiguration _configuration;
+        private readonly ILogger<MessageConsumeService> _logger;
+        private readonly StorageService _storage;
+        private readonly IServiceProvider _provider;
 
         private IChannel? _channel;
         private IConnection? _connection;
-        
 
         public MessageConsumeService(
             IConfiguration configuration,
             ILogger<MessageConsumeService> logger,
-            StorageService storage
+            StorageService storage,
+            IServiceProvider provider
         )
         {
             _configuration = configuration;
             _logger = logger;
             _storage = storage;
+            _provider = provider;
+        }
+
+        private IMessageHandler? GetMessageHandler(string model)
+        => model switch
+        {
+            "Grade" => _provider.GetService(typeof(GradeHandler)) as IMessageHandler,
+            "Lesson" => _provider.GetService(typeof(LessonHandler)) as IMessageHandler,
+            "Schedule" => _provider.GetService(typeof(ScheduleHandler)) as IMessageHandler,
+            "Student" => _provider.GetService(typeof(StudentHandler)) as IMessageHandler,
+            "Teacher" => _provider.GetService(typeof(TeacherHandler)) as IMessageHandler,
+            _ => null
+        };
+
+        private async Task HandleAction(IMessageHandler handler, string action, object data)
+        {
+            switch (action)
+            {
+                case "Create":
+                    await handler.CreateAsync(data);
+                    break;
+                case "Delete":
+                    await handler.DeleteAsync(data);
+                    break;
+                case "Edit":
+                    await handler.EditAsync(data);
+                    break;
+                default:
+                    throw new Exception($"Неизвестное действие: {action}");
+            }
         }
 
         private async Task OnReceivedAsync(object sender, BasicDeliverEventArgs args)
@@ -38,7 +71,18 @@ namespace Server.Services
                 try
                 {
                     var message = JsonSerializer.Deserialize<Message>(body);
+                    if (message == null)
+                    {
+                        throw new Exception("Данные не совпадают со схемой");
+                    }
 
+                    var handler = GetMessageHandler(message.ModelType);
+                    if (handler == null)
+                    {
+                        throw new Exception($"Неизвестная модель: {message.ModelType}");
+                    }
+
+                    await HandleAction(handler, message.Action, message.Data);
                 } catch (Exception e)
                 {
                     _logger.LogWarning($"Сообщение не получилось десериализовать: {e}");
@@ -79,7 +123,7 @@ namespace Server.Services
                 await _channel.BasicConsumeAsync(channelName, true, consumer);
             } catch (Exception e)
             {
-                
+                _logger.LogError($"Не удалось инициализировать MessageConsumeService: {e}");
             }
         }
 

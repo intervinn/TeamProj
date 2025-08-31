@@ -5,6 +5,6 @@ namespace Server.Models
     {
         public required string Action { get; set; }
         public required string ModelType { get; set; }
-        public object Data { get; set; }
+        public required object Data { get; set; }
     }
 }

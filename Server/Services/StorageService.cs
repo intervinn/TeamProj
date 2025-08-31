@@ -10,6 +10,11 @@ namespace Server.Services
         private AppDbContext _context;
         private IConfiguration _configuration;
 
+        public AppDbContext Context
+        {
+            get => _context;
+        }
+
         public StorageService(IConfiguration configuration)
         {
             _configuration = configuration;

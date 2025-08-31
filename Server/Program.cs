@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Server.Handlers;
 using Server.Services;
 
 namespace Server
@@ -20,6 +21,12 @@ namespace Server
                 })
                 .ConfigureServices(services =>
                 {
+                    services.AddSingleton<GradeHandler>();
+                    services.AddSingleton<StudentHandler>();
+                    services.AddSingleton<TeacherHandler>();
+                    services.AddSingleton<ScheduleHandler>();
+                    services.AddSingleton<LessonHandler>();
+
                     services.AddHostedService<StorageService>();
                     services.AddHostedService<MessageConsumeService>();
                 })
