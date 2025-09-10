@@ -4,14 +4,13 @@ using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using Server.Handlers;
-using Server.Models;
 using Shared.Models;
 using System.Text;
 using System.Text.Json;
 
 namespace Server.Services
 {
-    class MessageConsumeService : IHostedService, IDisposable
+    public class MessageConsumeService : IHostedService, IDisposable
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<MessageConsumeService> _logger;

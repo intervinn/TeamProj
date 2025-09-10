@@ -1,5 +1,5 @@
 ﻿
-namespace Server.Models
+namespace Shared.Models
 {
     public class Message
     {
