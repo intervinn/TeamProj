@@ -5,7 +5,7 @@ using Shared.Models;
 
 namespace Api.Controllers
 {
-    [Controller]
+    [ApiController]
     [Route("grades")]
     public class GradeController : ControllerBase
     {
@@ -18,14 +18,14 @@ namespace Api.Controllers
             _producer = producer;
         }
 
-        [HttpGet("/")]
+        [HttpGet]
         public async Task<IActionResult> GetGrades()
         {
             var result = await _storage.Context.Grades.ToListAsync();
             return Ok(result);
         }
 
-        [HttpPut("/")]
+        [HttpPut]
         public async Task<IActionResult> UpdateGrade([FromBody] Grade grade)
         {
             try
@@ -44,7 +44,7 @@ namespace Api.Controllers
             }
         }
 
-        [HttpPost("/")]
+        [HttpPost]
         public async Task<IActionResult> CreateGrade([FromBody] Grade grade)
         {
             try
@@ -64,7 +64,7 @@ namespace Api.Controllers
             }
         }
 
-        [HttpDelete("/")]
+        [HttpDelete]
         public async Task<IActionResult> DeleteGrade([FromBody] Grade grade)
         {
             try

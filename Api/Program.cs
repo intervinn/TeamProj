@@ -11,6 +11,7 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddHostedService<StorageService>();
+        builder.Services.AddHostedService<MessageProduceService>();
         builder.Services.AddControllers();
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
@@ -24,6 +25,7 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+        app.UseRouting();
 
         app.UseAuthorization();
 

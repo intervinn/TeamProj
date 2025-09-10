@@ -14,7 +14,6 @@ namespace Server.Services
     {
         private readonly IConfiguration _configuration;
         private readonly ILogger<MessageConsumeService> _logger;
-        private readonly StorageService _storage;
         private readonly IServiceProvider _provider;
 
         private IChannel? _channel;
@@ -23,13 +22,11 @@ namespace Server.Services
         public MessageConsumeService(
             IConfiguration configuration,
             ILogger<MessageConsumeService> logger,
-            StorageService storage,
             IServiceProvider provider
         )
         {
             _configuration = configuration;
             _logger = logger;
-            _storage = storage;
             _provider = provider;
         }
 
@@ -46,6 +43,7 @@ namespace Server.Services
 
         private async Task HandleAction(IMessageHandler handler, string action, object data)
         {
+            _logger.LogInformation($"Выполняю действие {action} для хэндлера {handler}");
             switch (action)
             {
                 case "Create":
@@ -74,6 +72,8 @@ namespace Server.Services
                     {
                         throw new Exception("Данные не совпадают со схемой");
                     }
+
+                    _logger.LogInformation($"Получено сообщение, подбираю хэндлер для модели {message.ModelType}");
 
                     var handler = GetMessageHandler(message.ModelType);
                     if (handler == null)
@@ -120,6 +120,7 @@ namespace Server.Services
                 AsyncEventingBasicConsumer consumer = new(_channel);
                 consumer.ReceivedAsync += OnReceivedAsync;
                 await _channel.BasicConsumeAsync(channelName, true, consumer);
+                _logger.LogInformation($"Инициализировано подключение к очереди {channelName}");
             } catch (Exception e)
             {
                 _logger.LogError($"Не удалось инициализировать MessageConsumeService: {e}");

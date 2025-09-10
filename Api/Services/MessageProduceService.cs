@@ -30,11 +30,11 @@ namespace Api.Services
                 throw new Exception("Канал закрыт");
             }
 
+            _logger.LogInformation($"Отправляю в очередь модель {message.ModelType} с действием {message.Action}");
             try
             {
                 var json = JsonSerializer.Serialize(message);
                 var body = Encoding.UTF8.GetBytes(json);
-
                 await _channel.BasicPublishAsync(
                     exchange: "",
                     routingKey: _channelName,
@@ -69,7 +69,7 @@ namespace Api.Services
                     cancellationToken: token
                 );
 
-
+                _logger.LogInformation($"Установлено подключение к очереди {_channelName}");
             } catch (Exception e)
             {
                 _logger.LogError(e, "Не удалось инициализировать MessageProduceService");
