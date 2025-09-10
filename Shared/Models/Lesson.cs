@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Shared.Models
 {
@@ -7,19 +8,27 @@ namespace Shared.Models
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
+        [JsonPropertyName("id")]
         public int Id { get; set; }
 
+        [JsonPropertyName("subject")]
         public required string Subject { get; set; } // Название предмета
-        public required TimeSpan StartTime { get; set; } // Время начала урока
-        public required TimeSpan EndTime { get; set; } // Время окончания урока
+        [JsonPropertyName("start_time")]
+        public required DateTime StartTime { get; set; } // Время начала урока
+        [JsonPropertyName("end_time")]
+        public required DateTime EndTime { get; set; } // Время окончания урока
 
+        [JsonPropertyName("teacher_id")]
         public required int TeacherId { get; set; } // Идентификатор учителя
+        [JsonPropertyName("schedule_id")]
         public required int ScheduleId { get; set; } // Идентификатор расписания
 
         [ForeignKey(nameof(TeacherId))]
+        [JsonIgnore]
         public required Teacher Teacher { get; set; } // Связь с учителем
 
         [ForeignKey(nameof(ScheduleId))]
+        [JsonIgnore]
         public required Schedule Schedule { get; set; } // Связь с расписанием
     }
 }

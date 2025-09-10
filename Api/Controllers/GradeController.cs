@@ -18,70 +18,20 @@ namespace Api.Controllers
             _producer = producer;
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetGrade(int id)
+            => Ok(await _storage.Context.Grades.Select(p => p.Id == id).FirstAsync());
         [HttpGet]
         public async Task<IActionResult> GetGrades()
-        {
-            var result = await _storage.Context.Grades.ToListAsync();
-            return Ok(result);
-        }
-
+            => Ok(await _storage.Context.Grades.ToListAsync());
         [HttpPut]
         public async Task<IActionResult> UpdateGrade([FromBody] Grade grade)
-        {
-            try
-            {
-                var message = new Message
-                {
-                    Action = "Edit",
-                    ModelType = "Grade",
-                    Data = grade
-                };
-                await _producer.SendAsync(message);
-                return Ok("Запрос отправлен");
-            } catch (Exception e)
-            {
-                return StatusCode(500, "Запрос не удалось отправить");
-            }
-        }
-
+            => await _producer.HandleSendAsync("Edit", "Grade", grade);
         [HttpPost]
         public async Task<IActionResult> CreateGrade([FromBody] Grade grade)
-        {
-            try
-            {
-                var message = new Message
-                {
-                    Action = "Create",
-                    ModelType = "Grade",
-                    Data = grade
-                };
-                await _producer.SendAsync(message);
-                return Ok("Запрос отправлен");
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, "Запрос не удалось отправить");
-            }
-        }
-
+            => await _producer.HandleSendAsync("Create", "Grade", grade);
         [HttpDelete]
         public async Task<IActionResult> DeleteGrade([FromBody] Grade grade)
-        {
-            try
-            {
-                var message = new Message
-                {
-                    Action = "Delete",
-                    ModelType = "Grade",
-                    Data = grade
-                };
-                await _producer.SendAsync(message);
-                return Ok("Запрос отправлен");
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, "Запрос не удалось отправить");
-            }
-        }
+            => await _producer.HandleSendAsync("Delete", "Grade", grade);
     }
 }

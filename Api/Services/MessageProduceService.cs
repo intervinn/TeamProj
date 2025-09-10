@@ -1,6 +1,8 @@
 ﻿
+using Microsoft.AspNetCore.Mvc;
 using RabbitMQ.Client;
 using Shared.Models;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 
@@ -20,6 +22,25 @@ namespace Api.Services
             _logger = logger;
             _configuration = configuration;
             _channelName = _configuration.GetSection("RabbitMQ")["ChannelName"] ?? "teamproj_queue";
+        }
+
+        public async Task<IActionResult> HandleSendAsync(string action, string model, object data)
+        {
+            try
+            {
+                var message = new Message
+                {
+                    Action = action,
+                    ModelType = model,
+                    Data = data
+                };
+                await SendAsync(message);
+                return new ObjectResult("Запрос отравлен") { StatusCode = 200 };
+            }
+            catch (Exception e)
+            {
+                return new ObjectResult("Запрос не удалось отправить") { StatusCode = 500 };
+            }
         }
 
         public async Task SendAsync(Message message)
