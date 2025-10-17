@@ -1,8 +1,8 @@
-﻿<Window x:Class="TeamProj.MainWindow"
+﻿<Window x:Class="Client.MainWindow"
            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
            xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
-           xmlns:pages="clr-namespace:TeamProj.Views.Pages"
+           xmlns:pages="clr-namespace:Client.Views.Pages"
            Title="Team Proj Client" Height="600" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>

@@ -23,6 +23,7 @@ namespace TeamProj.Views.Windows
 
             InitializeComponent();
             SetPageService(navigationViewPageProvider);
+            this.Closing += OnClosed;
 
             navigationService.SetNavigationControl(RootNavigation);
         }
@@ -44,9 +45,10 @@ namespace TeamProj.Views.Windows
         /// <summary>
         /// Raises the closed event.
         /// </summary>
-        protected override void OnClosed(EventArgs e)
+        protected void OnClosed(object _, EventArgs e)
         {
             base.OnClosed(e);
+            
 
             // Make sure that closing this window will begin the process of closing the application.
             Application.Current.Shutdown();

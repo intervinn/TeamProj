@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Client.ViewModels.Pages;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using System.IO;
 using System.Reflection;
@@ -48,10 +50,22 @@ namespace TeamProj
 
                 services.AddSingleton<DashboardPage>();
                 services.AddSingleton<DashboardViewModel>();
-                services.AddSingleton<DataPage>();
-                services.AddSingleton<DataViewModel>();
                 services.AddSingleton<SettingsPage>();
                 services.AddSingleton<SettingsViewModel>();
+                services.AddSingleton<GradesPage>();
+                services.AddSingleton<GradesViewModel>();
+                services.AddSingleton<LessonsPage>();
+                services.AddSingleton<LessonsViewModel>();
+                services.AddSingleton<SettingsPage>();
+                services.AddSingleton<SettingsViewModel>();
+                services.AddSingleton<StudentsPage>();
+                services.AddSingleton<StudentsViewModel>();
+                services.AddSingleton<TeachersPage>();
+                services.TryAddSingleton<TeachersViewModel>();
+                
+
+                services.AddSingleton<Services.ApiService>();
+                services.AddSingleton<Services.SnackbarService>();
             }).Build();
 
         /// <summary>

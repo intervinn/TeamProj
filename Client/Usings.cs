@@ -1,0 +1,10 @@
+﻿global using System;
+global using System.Collections.ObjectModel;
+global using System.ComponentModel;
+global using System.Net.Http.Json;
+global using System.Windows;
+global using Client.Models;
+global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
+global using Wpf.Ui;
+global using Wpf.Ui.Controls;
